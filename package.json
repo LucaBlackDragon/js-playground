@@ -1,0 +1,15 @@
+{
+  "name": "js-playground",
+  "version": "1.0.0",
+  "description": "Playground per svolgere esercizi in JavaScript",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel index.html"
+  },
+  "keywords": ["javascript", "playground", "sandbox", "exercise", "study", "settimeout"],
+  "author": "Luca Nardi <l.nardi@pluservice.net",
+  "license": "ISC",
+  "devDependencies": {
+    "parcel-bundler": "^1.12.4"
+  }
+}

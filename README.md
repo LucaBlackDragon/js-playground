@@ -12,6 +12,8 @@ Mini-progetto per svolgere esercizi sul JavaScript
   git clone https://devops.superdriver.it/DefaultCollection/met/_git/javascript-playground
   ```
   
+  (se richiesto, inserire le proprie credenziali aziendali - le stesse con cui accediamo ai nostri PC)
+
   Il comando creerà una cartella "javascript-playground".<br>
   Volendo si può specificare un nome diverso per la cartella di destinazione:
   

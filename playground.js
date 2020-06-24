@@ -4,6 +4,7 @@
 
 // Import "finto" per poter sfruttare i tipi di playground.d.ts
 // (porchetta del millennio ma volevo fare qualche esperimento anch'io!)
+// => DON'T TRY IT AT HOME!!!
 import Playground from './playground.js';
 
 // Importazione del framework CSS-only Mini.css

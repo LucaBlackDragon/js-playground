@@ -37,6 +37,8 @@ Mini-progetto per svolgere esercizi sul JavaScript
 
 - Aprire nel browser l'indirizzo mostrato nel terminale (e.g. http://localhost:1234)
 
+- Seguire i commenti nel codice del file [index.js](./index.js) per svolgere gli esercizi
+
 - Buon divertimento!
 
 Grazie a [Parcel](https://parceljs.org/), la pagina si aggiorna automaticamente ogni volta che i file vengono modificati

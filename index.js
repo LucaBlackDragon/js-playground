@@ -1,18 +1,28 @@
+// @ts-check
+// Il mitico commento che fa usare il TypeScript senza usare il TypeScript!
+// (più o meno...)
+
+// Importazione del framework CSS-only Mini.css
 // Documentazione: https://minicss.org/docs
 // (https://parceljs.org/css.html per chi è stupito di importare un file CSS
 // in JavaScript)
 import './node_modules/mini.css/dist/mini-default.css';
 
+// Importazione della libreria ChartJs
 // Documentazione: https://www.chartjs.org/docs/latest/
 // Esempi: https://www.chartjs.org/samples/latest/
 import Chart from 'chart.js';
 
-// Dipendenze interne
-import { randomColor } from './spellbook.js';
+// Importazione delle dipendenze interne
+import { getRandomInt, randomColor } from './spellbook.js';
 import localUsers from './users';
 
-// Impostazioni di default e helper per ChartJs:
+// Impostazioni di default e funzioni helper per ChartJs:
 
+/**
+ * Configurazione di default per tutti i grafici della pagina
+ * @type {Chart.ChartOptions}
+ */
 const defaultChartOptions = {
   responsive: true,
   maintainAspectRatio: true,
@@ -29,6 +39,15 @@ const defaultChartOptions = {
   }
 }
 
+/**
+ * Funzione per creare la configurazione necessaria ad aggiungere un titolo
+ * nella regione superiore di un grafico di ChartJs.
+ * È possibile fare il merge dell'oggetto ottenuto da questa funzione nella
+ * configurazione del grafico che si sta creando (ad esempio usando l'operatore
+ * `...`)
+ * @param {string} text   Titolo del grafico
+ * @returns {Chart.ChartOptions}
+ */
 const makeTopTitle = (text) => ({
   title: {
     display: true,
@@ -38,109 +57,234 @@ const makeTopTitle = (text) => ({
   }
 });
 
-const getChartContext = (canvasElementId) => document.getElementById(canvasElementId).getContext('2d');
-
-// Funzione principale di aggiornamento dei dati della dashboard:
-
-function updateDashboardData(users) {
+/**
+ * Funzione di aggiornamento delle statistiche
+ * @param {PlaygroundTypes.User[]} users  Dati degli utenti
+ */
+const updateStats = (users) => {
 
   // Aggiorno i contatori degli utenti:
-  
-  document.querySelector('#total-users').innerHTML = users.length;
-  // TODO: aggiornare le altre componenti del riquadro "Statistiche utenti"
-  
-  // Sesso degli utenti:
 
-  const genderData = [45, 55]; // TODO: ricavare dai dati degli utenti
-  
-  new Chart(getChartContext('users-gender'), {
-    type: 'pie',
-    data: {
-      labels: ['M', 'F'],
-      datasets: [
-        {
-          data: genderData,
-          backgroundColor: [
-            '#2b2bff',
-            '#ff57ae',
-          ]
-        }
-      ]
-    },
-    options: {
-      ...defaultChartOptions,
-      ...makeTopTitle('Sesso degli utenti'),
-    }
-  });
-  
-  // Nazionalità degli utenti:
-
-  const nationalityData = [
-    {
-      nationality: 'Italy',
-      count: 32,
-    },
-    {
-      nationality: 'United States',
-      count: 58,
-    },
-    {
-      nationality: 'Chile',
-      count: 10,
-    },
-  ]; // TODO: ricavare dai dati degli utenti
-  
-  new Chart(getChartContext('users-nationality'), {
-    type: 'doughnut',
-    data: {
-      labels: nationalityData.map(({ nationality }) => nationality),
-      datasets: [
-        {
-          data: nationalityData.map(({ count }) => count),
-          backgroundColor: nationalityData.map(() => randomColor()),
-        }
-      ]
-    },
-    options: {
-      ...defaultChartOptions,
-      ...makeTopTitle('Nazionalità degli utenti'),
-    }
-  });
-
-  // Utenti per fasce di età:
+  document.querySelector('#total-users').innerHTML = users.length.toString();
 
   // TODO:
-  // ottenere una o più strutture dati per suddividere gli utenti nelle
-  // seguenti fasce di età: [0,18),[18,40),[40,65),[65,100+]
-  // e generare `labels` e `data` nella configurazione del grafico:
-  
-  new Chart(getChartContext('users-ages'), {
-    type: 'bar',
-    data: {
-      labels: ['0-100+'], // TODO: sostituire
-      datasets: [
-        {
-          backgroundColor: randomColor(),
-          data: [users.length], // TODO: sostituire
-        }
-      ]
-    },
-    options: {
-      ...defaultChartOptions,
-      ...makeTopTitle('Utenti per fasce di età'),
-      legend: {
-        display: false
-      }
+  // aggiornare le altre componenti del riquadro "Statistiche utenti" tenendo
+  // conto che:
+  // - la data di nascita e l'età degli utenti si trova nell'oggetto `dob`
+  //   (date of birth)
+  // - la data di iscrizione e gli anni di iscrizione si trovano nell'oggetto
+  //   `registered`
+
+};
+
+/**
+ * Funzione di aggiornamento dei grafici
+ * @param {PlaygroundTypes.User[]} users  Dati degli utenti
+ */
+const updateCharts = (function chartUpdateLogic() {
+
+  // NB:
+  // qui utilizzo una IIFE per fare in modo da poter definire alcune variabili e
+  // funzioni private che non siano visibili all'esterno (a partire dalla
+  // "mappa" dei grafici, ovvero l'oggetto in cui conservo le istanze dei
+  // grafici creati con ChartJs)
+
+  // "mappa" (privata) dei grafici della pagina
+  // (ad ogni chiave dell'oggetto corrisponderà un grafico della pagina)
+  const charts = {};
+
+  /**
+   * Recupera il grafico richiesto dalla "mappa" dei charts.
+   * Solleva un errore se il grafico non viene trovato
+   * @param {string} chartName  Identificativo univoco del grafico
+   * @returns {Chart}
+   */
+  const getChart = (chartName) => {
+    if (chartName in charts) return charts[chartName];
+    throw new Error(`Grafico "${chartName}" non trovato`);
+  };
+
+  /**
+   * Funzione che utilizzo internamente per creare o aggiornare i grafici
+   * registrandoli nella "mappa" `charts`
+   * @param {string} chartName                      Identificativo univoco del grafico
+   * @param {string} canvasElementId                Id del <canvas/> che ospita il grafico
+   * @param {Chart.ChartConfiguration} chartConfig  Configurazione del grafico
+   */
+  const createOrUpdateChart = (chartName, canvasElementId, chartConfig) => {
+
+    // NB:
+    // dal momento che i grafici sono componenti che vengono generati con il
+    // JavaScript, se i dati cambiano bisogna creare/aggiornare/distruggere i
+    // grafici con le API previste dalla libreria ChartJs:
+    // https://www.chartjs.org/docs/latest/developers/api.html
+
+    if (!(chartName in charts)) {
+      // Se il grafico non è presente nella "mappa", lo inizializzo ora con un
+      // metodo "iniettato" in segreto negli elementi da ChartJs (infatti il
+      // controllo di tipo di TypeScript si insospettirebbe, quindi lo disattivo
+      // per questa riga!)
+      // @ts-ignore
+      const chartContext = document.getElementById(canvasElementId).getContext('2d');
+      charts[chartName] = new Chart(chartContext, chartConfig);
     }
-  });
+    else {
+      // Ottengo l'istanza già esistente del grafico
+      const chart = getChart(chartName);
+      // ChartJs è un caso interessante ed abbastanza tipico in JavaScript:
+      // per aggiornare il grafico già esistente non devo invocare il metodo
+      // update passando la nuova configurazione, bensì MUTARE la configurazione
+      // esistente.
+      // Nello specifico, utilizzo splice per rimuovere tutte le labels e tutti
+      // i datasets dell'array originale ed inserire quelli nuovi (splice è uno
+      // dei metodi degli array che mutano l'array su cui vengono invocati).
+      // Inoltre, non invoco splice direttamente, ma utilizzo il metodo apply
+      // (disponibile in tutte le funzioni) per poter comporre dinamicamente gli
+      // argomenti con cui invocare splice e poter specificare il "this" con cui
+      // verrà eseguito (che deve essere l'array stesso):
+      const replaceArrayContents = (targetArray, newItemsArray) => {
+        // https://developer.mozilla.org/it/docs/Web/JavaScript/Reference/Global_Objects/Array/splice
+        const spliceArguments = [0, targetArray.length, ...newItemsArray];
+        targetArray.splice.apply(targetArray, spliceArguments);
+      };
+      // NB: sto dando per scontato di voler aggiornare solo labels e datasets;
+      //     eventualmente devo aggiungere qui la logica per aggiornare altri
+      //     parametri di configurazione
+      replaceArrayContents(chart.data.labels, chartConfig.data.labels);
+      replaceArrayContents(chart.data.datasets, chartConfig.data.datasets);
+      charts[chartName].update();
+    }
 
-  // Ultimi N utenti registrati
+  };
 
-  const usersToTake = 20;
+  /**
+   * Funzione che costituirà la "API pubblica" della IIFE e serve ad aggiornare
+   * i grafici
+   * @param {PlaygroundTypes.User[]} users  Dati degli utenti
+   */
+  const updateCharts = (users) => {
 
-  document.querySelector('#latest-users-count').innerHTML = usersToTake;
+    // GRAFICO 1 - Sesso degli utenti
 
-  // const usersContainer = document.querySelector('#latest-users');
+    // TODO: ricavare dai dati degli utenti invece che generare i dati a caso
+
+    const malesCount = getRandomInt(40, 50);
+    const femalesCount = 100 - malesCount;
+
+    const genderData = [malesCount, femalesCount];
+
+    /** @type {Chart.ChartConfiguration} */
+    const userGenderChartConfig = {
+      type: 'pie',
+      data: {
+        labels: ['M', 'F'],
+        datasets: [
+          {
+            data: genderData,
+            backgroundColor: [
+              '#2b2bff',
+              '#ff57ae',
+            ]
+          }
+        ]
+      },
+      options: {
+        ...defaultChartOptions,
+        ...makeTopTitle('Sesso degli utenti'),
+      }
+    };
+
+    createOrUpdateChart('usersGenderChart', 'users-gender', userGenderChartConfig);
+
+    // GRAFICO 2 - Nazionalità degli utenti
+
+    // TODO: ricavare dai dati degli utenti invece che generare i dati a caso
+
+    const chileCount = getRandomInt(2, 15);
+    const usaCount = getRandomInt(65, 35);
+    const italyCount = 100 - chileCount - usaCount;
+
+    const nationalityData = [
+      {
+        nationality: 'Italy',
+        count: italyCount,
+      },
+      {
+        nationality: 'United States',
+        count: usaCount,
+      },
+      {
+        nationality: 'Chile',
+        count: chileCount,
+      },
+    ];
+
+    /** @type {Chart.ChartConfiguration} */
+    const usersNationalityChartConfig = {
+      type: 'doughnut',
+      data: {
+        labels: nationalityData.map(({ nationality }) => nationality),
+        datasets: [
+          {
+            data: nationalityData.map(({ count }) => count),
+            backgroundColor: nationalityData.map(() => randomColor()),
+          }
+        ]
+      },
+      options: {
+        ...defaultChartOptions,
+        ...makeTopTitle('Nazionalità degli utenti'),
+      }
+    };
+
+    createOrUpdateChart('usersNationalityChart', 'users-nationality', usersNationalityChartConfig);
+
+    // GRAFICO 3 - Utenti per fasce di età
+
+    // TODO:
+    // ottenere una o più strutture dati per suddividere gli utenti nelle
+    // seguenti fasce di età: [0,18),[18,40),[40,65),[65,100+]
+    // e generare `labels` e `data` nella configurazione del grafico
+
+    /** @type {Chart.ChartConfiguration} */
+    const usersAgesChartConfig = {
+      type: 'bar',
+      data: {
+        labels: ['0-100+'],
+        datasets: [
+          {
+            backgroundColor: randomColor(),
+            data: [users.length],
+          }
+        ]
+      },
+      options: {
+        ...defaultChartOptions,
+        ...makeTopTitle('Utenti per fasce di età'),
+        legend: {
+          display: false
+        }
+      }
+    };
+
+    createOrUpdateChart('usersAgesChart', 'users-ages', usersAgesChartConfig);
+
+  };
+
+  return updateCharts;
+
+})();
+
+/**
+ * Funzione di aggiornamento della lista degli ultimi N utenti
+ * @param {PlaygroundTypes.User[]} users  Dati degli utenti
+ */
+const updateNewestUsers = (users) => {
+
+  // Evito di andare "in overflow" se gli utenti fossero meno di 20
+  const usersToTake = Math.max(20, users.length);
+
+  document.querySelector('#latest-users-count').innerHTML = usersToTake.toString();
 
   // TODO:
   // 1. ottenere l'elenco degli ultimi N utenti registrati
@@ -172,13 +316,32 @@ function updateDashboardData(users) {
 
 };
 
-// Funzione di inizializzazione/aggiornamento della dashboard
+/**
+ * Funzione principale di aggiornamento dei dati della dashboard:
+ * @param {PlaygroundTypes.User[]} users  Dati degli utenti
+ */
+const updateDashboardData = (users) => {
 
-function refreshDashboard() {
+  // Aggiorno le statistiche:
+  updateStats(users);
+
+  // Aggiorno i grafici:
+  updateCharts(users);
+
+  // Aggiorno gli ultimi N utenti registrati
+  updateNewestUsers(users);
+
+};
+
+/**
+ * Funzione di inizializzazione/aggiornamento della dashboard
+ */
+const refreshDashboard = () => {
+
   // inizializzo la dashboard con i dati degli utenti locali:
   updateDashboardData(localUsers);
 
-  // TODO FINALE:
+  // TODO:
   // richiedere i dati dalle API effettuando una chiamata http GET a questo URL:
   // https://randomuser.me/api/?results=5000
   // invece che importare i dati dal file users.js
@@ -202,7 +365,7 @@ function refreshDashboard() {
   //     XMLHttpRequest è ancora basato sul vecchio pattern delle callback
   //     (questa è solo una delle tante caratteristiche che lo rendono antico e
   //     terribile)
-}
+};
 
 // Prima invocazione automatica della funzione di inizializzazione:
 refreshDashboard();

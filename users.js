@@ -1,5 +1,5 @@
-// https://randomuser.me/api/?results=50&format=pretty
-export default [
+/** @type {PlaygroundTypes.User[]} */
+const sampleData = [
   {
     "gender": "female",
     "name": {
@@ -2800,4 +2800,6 @@ export default [
     },
     "nat": "NZ"
   }
-]
+];
+
+export default sampleData;

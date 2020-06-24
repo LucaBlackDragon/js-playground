@@ -8,8 +8,16 @@
  * gravi!
  */
 
-declare namespace PlaygroundTypes {
-  
+declare class Playground {
+  static play : Playground.SetupFn
+}
+
+declare namespace Playground {
+
+  interface SetupFn {
+    (source: string, subString: string): boolean;
+  }
+
   type Gender = "male" | "female";
 
   interface User {
@@ -90,5 +98,5 @@ declare namespace PlaygroundTypes {
   }
 }
 
-export = PlaygroundTypes;
-export as namespace PlaygroundTypes;
+export = Playground;
+export as namespace Playground;

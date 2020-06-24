@@ -3,8 +3,8 @@
 // (più o meno...)
 
 // Import "finto" di playgroundTypes per poter sfruttare i tipi
-// (meglio non sapere!!!)
-import PlaygroundTypes from './playground.js';
+// (porchetta del millennio ma volevo fare qualche esperimento anch'io!)
+import Playground from './playground.js';
 
 // Importazione del framework CSS-only Mini.css
 // Documentazione: https://minicss.org/docs
@@ -63,7 +63,7 @@ const makeTopTitle = (text) => ({
 
 /**
  * Funzione di aggiornamento delle statistiche
- * @param {PlaygroundTypes.User[]} users  Dati degli utenti
+ * @param {Playground.User[]} users  Dati degli utenti
  */
 const updateStats = (users) => {
 
@@ -83,7 +83,7 @@ const updateStats = (users) => {
 
 /**
  * Funzione di aggiornamento dei grafici
- * @param {PlaygroundTypes.User[]} users  Dati degli utenti
+ * @param {Playground.User[]} users  Dati degli utenti
  */
 const updateCharts = (function chartUpdateLogic() {
 
@@ -164,7 +164,7 @@ const updateCharts = (function chartUpdateLogic() {
   /**
    * Funzione che costituirà la "API pubblica" della IIFE e serve ad aggiornare
    * i grafici
-   * @param {PlaygroundTypes.User[]} users  Dati degli utenti
+   * @param {Playground.User[]} users  Dati degli utenti
    */
   const updateCharts = (users) => {
 
@@ -281,7 +281,7 @@ const updateCharts = (function chartUpdateLogic() {
 
 /**
  * Funzione di aggiornamento della lista degli ultimi N utenti
- * @param {PlaygroundTypes.User[]} users  Dati degli utenti
+ * @param {Playground.User[]} users  Dati degli utenti
  */
 const updateNewestUsers = (users) => {
 
@@ -322,7 +322,7 @@ const updateNewestUsers = (users) => {
 
 /**
  * Funzione principale di aggiornamento dei dati della dashboard:
- * @param {PlaygroundTypes.User[]} users  Dati degli utenti
+ * @param {Playground.User[]} users  Dati degli utenti
  */
 const updateDashboardData = (users) => {
 

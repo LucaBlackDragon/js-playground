@@ -2,7 +2,7 @@
 // Il mitico commento che fa usare il TypeScript senza usare il TypeScript!
 // (più o meno...)
 
-// Import "finto" di playgroundTypes per poter sfruttare i tipi
+// Import "finto" per poter sfruttare i tipi di playground.d.ts
 // (porchetta del millennio ma volevo fare qualche esperimento anch'io!)
 import Playground from './playground.js';
 

@@ -9,14 +9,10 @@
  */
 
 declare class Playground {
-  static play : Playground.SetupFn
+  static play : function
 }
 
 declare namespace Playground {
-
-  interface SetupFn {
-    (source: string, subString: string): boolean;
-  }
 
   type Gender = "male" | "female";
 

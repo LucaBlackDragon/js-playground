@@ -1,4 +1,3 @@
-/** @type {PlaygroundTypes.User[]} */
 const sampleData = [
   {
     "gender": "female",

@@ -4,7 +4,7 @@
   "description": "Playground per svolgere esercizi in JavaScript",
   "main": "index.js",
   "scripts": {
-    "start": "parcel index.html"
+    "start": "parcel serve ./index.html"
   },
   "keywords": [
     "javascript",
@@ -17,7 +17,7 @@
   "author": "Luca Nardi <l.nardi@pluservice.net",
   "license": "ISC",
   "devDependencies": {
-    "parcel-bundler": "^1.12.4",
+    "parcel": "^2.0.0-beta.1",
     "typescript": "^3.9.5"
   },
   "dependencies": {

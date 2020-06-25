@@ -4,15 +4,17 @@ Mini-progetto per svolgere esercizi sul JavaScript
 
 ## Istruzioni per l'utilizzo
 
-- Installare [Git for Windows](https://git-scm.com/download/win)
+- Installa [Git for Windows](https://git-scm.com/download/win)
 
-- Clonare il repository aprendo il terminale in una cartella a piacere (e.g. `C:\Progetti`) ed eseguendo il comando:
+- Installa la versione LTS di [Node.js](https://nodejs.org/)
+
+- Clona il repository aprendo il terminale in una cartella a piacere (e.g. `C:\Progetti`) ed eseguendo il comando:
   
   ```sh
   git clone https://devops.superdriver.it/DefaultCollection/met/_git/javascript-playground
   ```
   
-  (se richiesto, inserire le proprie credenziali aziendali - le stesse con cui accediamo ai nostri PC)
+  (se richiesto, inserisci le tue credenziali aziendali - le stesse con cui accedi al tuo PC)
 
   Il comando creerà una cartella "javascript-playground".<br>
   Volendo si può specificare un nome diverso per la cartella di destinazione:
@@ -21,24 +23,45 @@ Mini-progetto per svolgere esercizi sul JavaScript
   git clone https://devops.superdriver.it/DefaultCollection/met/_git/javascript-playground NomeDellaCartella
   ```
 
-- Installare la versione LTS di [Node.js](https://nodejs.org/)
+- Entra nella cartella in cui hai scaricato il repository e crea un nuovo branch con un nome a piacere, ad esempio:
+  
+  ```sh
+  git checkout -b esercizi-nardil
+  ```
 
-- Entrare nella cartella del repository ed eseguire il comando:
+- Entra nella cartella del repository ed esegui il comando:
 
   ```sh
   npm install
   ```
 
-- Avviare il server di sviluppo con il comando:
+  per installare le dipendenze del progetto
+
+- Avvia il server di sviluppo con il comando:
 
   ```sh
   npm start
   ```
 
-- Aprire nel browser l'indirizzo mostrato nel terminale (e.g. http://localhost:1234)
+- Apri nel browser l'indirizzo mostrato nel terminale (e.g. http://localhost:1234)
 
-- Seguire i commenti nel codice del file [index.js](./index.js) per svolgere gli esercizi
+- Segui i commenti nel codice del file [index.js](./index.js) per svolgere gli esercizi
 
 - Buon divertimento!
+
+- Per committare le modifiche durante o alla fine dello sviluppo, usa i seguenti comandi:
+
+  ```sh
+  git add .
+  git commit -m "Il mio messaggio di commit"
+  ```
+  
+- Alla fine, pubblica le modifiche nel repository con il comando:
+
+  ```sh
+  git push -u origin esercizi-nardil
+  ```
+
+  (sostituendo `esercizi-nardil` con il nome del tuo branch)
 
 Grazie a [Parcel](https://parceljs.org/), la pagina si aggiorna automaticamente ogni volta che i file vengono modificati

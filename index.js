@@ -77,11 +77,11 @@ const updateStats = (users) => {
 
   const currentYear = 2013; //(new Date()).getFullYear();
 
-  // controllo se la stringa `user.registered.date` contiene l'anno corrente ("2020")
+  // controllo se la stringa `user.registered.date` inizia con l'anno corrente
   const lastYearUsers = users.filter((user) => {
 
     const dataDiRegistrazione = user.registered.date;
-    return dataDiRegistrazione.indexOf(currentYear) > -1
+    return dataDiRegistrazione.indexOf(currentYear) === 0;
   });
 
   document.querySelector('#last-year-users').innerHTML = lastYearUsers.length.toString();

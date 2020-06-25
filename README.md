@@ -11,16 +11,14 @@ Mini-progetto per svolgere esercizi sul JavaScript
 - Clona il repository aprendo il terminale in una cartella a piacere (e.g. `C:\Progetti`) ed eseguendo il comando:
   
   ```sh
-  git clone https://devops.superdriver.it/DefaultCollection/met/_git/javascript-playground
+  git clone https://github.com/LucaBlackDragon/js-playground.git
   ```
-  
-  (se richiesto, inserisci le tue credenziali aziendali - le stesse con cui accedi al tuo PC)
 
-  Il comando creerà una cartella "javascript-playground".<br>
+  Il comando creerà una cartella "js-playground".<br>
   Volendo si può specificare un nome diverso per la cartella di destinazione:
   
   ```sh
-  git clone https://devops.superdriver.it/DefaultCollection/met/_git/javascript-playground NomeDellaCartella
+  git clone https://github.com/LucaBlackDragon/js-playground.git NomeDellaCartella
   ```
 
 - Entra nella cartella in cui hai scaricato il repository e crea un nuovo branch con un nome a piacere, ad esempio:

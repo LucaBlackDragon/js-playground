@@ -1,11 +1,11 @@
-import localUsers from './users.js';
+import users from './users.js';
 
 /**
  * Restituisce l'elenco degli ipotetici utenti della nostra applicazione
  */
 export default function getUsers() {
 
-  return localUsers;
+  return users;
 
   // TODO:
   // convertire questa funzione in una funzione asincrona e richiedere i dati

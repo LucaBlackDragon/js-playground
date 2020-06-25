@@ -37,7 +37,7 @@ const defaultChartOptions = {
   legend: {
     position: 'left',
   }
-}
+};
 
 /**
  * Funzione per creare la configurazione necessaria ad aggiungere un titolo

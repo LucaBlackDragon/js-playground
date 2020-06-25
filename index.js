@@ -340,8 +340,18 @@ const updateDashboardData = (users) => {
  */
 const refreshDashboard = () => {
 
+  // disabilito temporaneamente il bottone "Aggiorna"
+  const refreshButton = document.querySelector('#refresh-button');
+  refreshButton.setAttribute('disabled', 'true');
+
   // inizializzo la dashboard con i dati degli utenti locali:
   updateDashboardData(getUsers());
+
+  // Riabilito il bottone "Aggiorna" dopo 300 ms in modo da dare la percezione
+  // del caricamento all'utente anche se getUsers è un metodo sincrono che
+  // risponde immediatamente all'invocazione (o forse è solo una scusa per usare
+  // il mio amatissimo setTimeout)
+  setTimeout(() => refreshButton.removeAttribute('disabled'), 300);
 
   // TODO:
   // modificare la funzione getUsers (e di conseguenza questa invocazione)

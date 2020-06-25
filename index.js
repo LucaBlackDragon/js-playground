@@ -75,6 +75,25 @@ const updateStats = (users) => {
   // - la data di iscrizione e gli anni di iscrizione si trovano nell'oggetto
   //   `registered`
 
+  const currentYear = 2013; //(new Date()).getFullYear();
+
+  // controllo se la stringa `user.registered.date` contiene l'anno corrente ("2020")
+  const lastYearUsers = users.filter((user) => {
+
+    const dataDiRegistrazione = user.registered.date;
+    return dataDiRegistrazione.indexOf(currentYear) > -1
+  });
+
+  document.querySelector('#last-year-users').innerHTML = lastYearUsers.length.toString();
+
+  const sumOfAges = users.reduce((sum, user) => {
+    return sum + user.dob.age;
+  }, 0);
+
+  const ageMean = sumOfAges / users.length;
+
+  document.querySelector('#mean-users-age').innerHTML = ageMean.toString();
+
 };
 
 /**
@@ -169,10 +188,13 @@ const updateCharts = (function chartUpdateLogic() {
     // TODO:
     // ricavare dai dati degli utenti invece che generare i dati a caso
 
-    const malesCount = getRandomInt(40, 50);
-    const femalesCount = 100 - malesCount;
+    // const malesCount = getRandomInt(40, 50);
+    // const femalesCount = 100 - malesCount;
 
-    const genderData = [malesCount, femalesCount];
+    const males = users.filter(user => user.gender === 'male');
+    const females = users.filter(user => user.gender === 'female');
+
+    const genderData = [males.length, females.length];
 
     /** @type {Chart.ChartConfiguration} */
     const userGenderChartConfig = {
@@ -202,24 +224,53 @@ const updateCharts = (function chartUpdateLogic() {
     // TODO:
     // ricavare dai dati degli utenti invece che generare i dati a caso
 
-    const chileCount = getRandomInt(2, 15);
-    const usaCount = getRandomInt(65, 35);
-    const italyCount = 100 - chileCount - usaCount;
+    // const chileCount = getRandomInt(2, 15);
+    // const usaCount = getRandomInt(65, 35);
+    // const italyCount = 100 - chileCount - usaCount;
 
-    const nationalityData = [
-      {
-        nationality: 'Italy',
-        count: italyCount,
-      },
-      {
-        nationality: 'United States',
-        count: usaCount,
-      },
-      {
-        nationality: 'Chile',
-        count: chileCount,
-      },
-    ];
+    // const nationalityData = [
+    //   {
+    //     nationality: 'Italy',
+    //     count: italyCount,
+    //   },
+    //   {
+    //     nationality: 'United States',
+    //     count: usaCount,
+    //   },
+    //   {
+    //     nationality: 'Chile',
+    //     count: chileCount,
+    //   },
+    // ];
+
+    const counters = users.reduce((map, user) => {
+
+      const country = user.location.country;
+
+      if (country in map) {
+        map[country]++;
+      }
+      else {
+        map[country] = 1;
+      }
+
+      return map;
+
+    }, {});
+
+    const nationalityData = [];
+    
+    for(let key in counters) {
+      const countryData = {
+        nationality: key,
+        count: counters[key]
+      };
+      nationalityData.push(countryData)
+    }
+
+    nationalityData.sort(function (data1, data2) {
+      return data2.count - data1.count;
+    });
 
     /** @type {Chart.ChartConfiguration} */
     const usersNationalityChartConfig = {
@@ -248,15 +299,40 @@ const updateCharts = (function chartUpdateLogic() {
     // seguenti fasce di età: [0,18),[18,40),[40,65),[65,100+]
     // e generare `labels` e `data` nella configurazione del grafico
 
+    const agesCounters = users.reduce((map, user) => {
+
+      const age = user.dob.age;
+
+      if (age >= 65) map['[65,100+]']++;
+      else if (age >= 40) map['[40,65)']++;
+      else if (age >= 18) map['[18,40)']++;
+      else map['[0-18)']++;
+
+      return map;
+
+    }, {
+      '[0-18)': 0,
+      '[18,40)': 0,
+      '[40,65)': 0,
+      '[65,100+]': 0,
+    });
+
+    const labels = [];
+    const data = [];
+    for(let key in agesCounters) {
+      labels.push(key);
+      data.push(agesCounters[key]);
+    }
+
     /** @type {Chart.ChartConfiguration} */
     const usersAgesChartConfig = {
       type: 'bar',
       data: {
-        labels: ['0-100+'],
+        labels,
         datasets: [
           {
             backgroundColor: randomColor(),
-            data: [users.length],
+            data,
           }
         ]
       },

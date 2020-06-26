@@ -403,6 +403,10 @@ const updateNewestUsers = (users) => {
     const img = document.createElement('img');
     img.classList.add('section', 'media');
     img.setAttribute('src', user.picture.large);
+    // bisognerebbe SEMPRE valorizzare l'attributo "alt" delle immagini, per
+    // migliorare l'accessibilità del sito (le persone non vedenti... non vedono
+    // la foto!)
+    img.setAttribute('alt', `foto di ${user.name.first} ${user.name.last}`);
 
     card.appendChild(section);
     card.appendChild(img);

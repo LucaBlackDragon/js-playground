@@ -386,20 +386,30 @@ const updateNewestUsers = (users) => {
   //    utilizzando le funzioni document.createElement e document.appendChild
 
   /**
-   * Crea il codice HTML di una "card" dei dati dell'utente.
+   * Crea i nodi HTML di una "card" dei dati dell'utente
    * @param {getUsers.User} user  Dati di un utente
-   * @returns {string}            Codice HTML della card
-   * 
-   * NB: mi sono pentito di avere suggerito l'utilizzo di document.createElement
-   *     e document.appendChild: con document.innerHTML è tutto molto più facile
+   * @returns {HTMLDivElement}    Struttura HTML della "card" dell'utente
    */
-  const makeUserCard = user => `<div class="card small">
-  <div class="section">
-    <h4>${user.name.first} ${user.name.last}</h4>
-    <h6>${user.email}</h6>
-  </div>
-  <img src="${user.picture.large}" class="section media"/>
-</div>`;
+  const makeUserCard = user => {
+    
+    const card = document.createElement('div');
+    card.classList.add('card', 'small');
+
+    const section = document.createElement('div');
+    section.classList.add('section');
+    section.innerHTML = `<h4>${user.name.first} ${user.name.last}</h4>`;
+    section.innerHTML += `<h6>${user.email}</h6>`;
+
+    const img = document.createElement('img');
+    img.classList.add('section', 'media');
+    img.setAttribute('src', user.picture.large);
+
+    card.appendChild(section);
+    card.appendChild(img);
+
+    return card;
+
+  };
 
   // 3. per ciascun utente, utilizzare la funzione ed inserire la card ottenuta
   //    all'interno del <div id="latest-users"/>, dopo avere eliminato
@@ -411,7 +421,7 @@ const updateNewestUsers = (users) => {
 
   // Utilizzo for...of per scorrere l'array (e NON for...in!!!)
   for(let user of latestUsers) {
-    cardsContainer.innerHTML += makeUserCard(user);
+    cardsContainer.appendChild(makeUserCard(user));
   }
 
   // NB:

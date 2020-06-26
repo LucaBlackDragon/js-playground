@@ -75,7 +75,7 @@ const updateStats = (users) => {
   // - la data di iscrizione e gli anni di iscrizione si trovano nell'oggetto
   //   `registered`
 
-  const currentYear = 2013; //(new Date()).getFullYear();
+  const currentYear = (new Date()).getFullYear();
 
   // controllo se la stringa `user.registered.date` inizia con l'anno corrente
   const lastYearUsers = users.filter((user) => {
@@ -366,6 +366,12 @@ const updateNewestUsers = (users) => {
 
   // TODO:
   // 1. ottenere l'elenco degli ultimi N utenti registrati
+
+  const latestUsers = users
+  // ordinamento decrescente per data di registrazione (NB: è user2 - user1)
+  .sort((user1, user2) => new Date(user2.registered.date).getTime() - new Date(user1.registered.date).getTime())
+  .slice(0, usersToTake);
+
   // 2. creare una funzione che accetti come argomento i dati di un utente
   //    e restituisca il seguente albero di nodi HTML:
   //
@@ -378,10 +384,36 @@ const updateNewestUsers = (users) => {
   //    </div>
   //
   //    utilizzando le funzioni document.createElement e document.appendChild
+
+  /**
+   * Crea il codice HTML di una "card" dei dati dell'utente.
+   * @param {getUsers.User} user  Dati di un utente
+   * @returns {string}            Codice HTML della card
+   * 
+   * NB: mi sono pentito di avere suggerito l'utilizzo di document.createElement
+   *     e document.appendChild: con document.innerHTML è tutto molto più facile
+   */
+  const makeUserCard = user => `<div class="card small">
+  <div class="section">
+    <h4>${user.name.first} ${user.name.last}</h4>
+    <h6>${user.email}</h6>
+  </div>
+  <img src="${user.picture.large}" class="section media"/>
+</div>`;
+
   // 3. per ciascun utente, utilizzare la funzione ed inserire la card ottenuta
-  //    all'interno del <div id="usersContainer"/>, dopo avere eliminato
+  //    all'interno del <div id="latest-users"/>, dopo avere eliminato
   //    tutto il contenuto eventualmente già presente all'interno
-  //
+
+  const cardsContainer = document.querySelector('#latest-users');
+
+  cardsContainer.innerHTML = '';
+
+  // Utilizzo for...of per scorrere l'array (e NON for...in!!!)
+  for(let user of latestUsers) {
+    cardsContainer.innerHTML += makeUserCard(user);
+  }
+
   // NB:
   // - Per "svuotare" un elemento HTML si può utilizzare il metodo removeChild()
   //   come descritto su MDN:

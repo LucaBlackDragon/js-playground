@@ -360,7 +360,7 @@ const updateCharts = (function chartUpdateLogic() {
 const updateNewestUsers = (users) => {
 
   // Evito di andare "in overflow" se gli utenti fossero meno di 20
-  const usersToTake = Math.max(20, users.length);
+  const usersToTake = Math.min(20, users.length);
 
   document.querySelector('#latest-users-count').innerHTML = usersToTake.toString();
 

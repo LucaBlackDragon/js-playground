@@ -10,7 +10,7 @@ export default function getUsers() {
   // TODO:
   // convertire questa funzione in una funzione asincrona e richiedere i dati
   // dalle API effettuando una chiamata http GET a questo URL:
-  // https://randomuser.me/api/?results=5000
+  // https://randomuser.me/api/?results=500
   // invece che importare i dati dal file users.js
   //
   // Per le chiamate http, i più coraggiosi possono utilizzare il JavaScript

@@ -460,14 +460,15 @@ const updateDashboardData = (users) => {
 /**
  * Funzione di inizializzazione/aggiornamento della dashboard
  */
-const refreshDashboard = () => {
+const refreshDashboard = async () => {
 
   // disabilito temporaneamente il bottone "Aggiorna"
   const refreshButton = document.querySelector('#refresh-button');
   refreshButton.setAttribute('disabled', 'true');
 
   // inizializzo la dashboard con i dati degli utenti locali:
-  updateDashboardData(getUsers());
+  const users = await getUsers();
+  updateDashboardData(users);
 
   // Riabilito il bottone "Aggiorna" dopo 300 ms in modo da dare la percezione
   // del caricamento all'utente anche se getUsers è un metodo sincrono che

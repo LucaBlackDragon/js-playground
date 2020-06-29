@@ -21,6 +21,7 @@
     "typescript": "^3.9.5"
   },
   "dependencies": {
+    "axios": "^0.19.2",
     "chart.js": "^2.9.3",
     "mini.css": "^3.0.1"
   }

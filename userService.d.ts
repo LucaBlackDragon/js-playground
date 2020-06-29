@@ -12,11 +12,11 @@ export = getUsers;
 /**
  * Restituisce l'elenco degli utenti
  */
-declare function getUsers(): getUsers.User[];
+// declare function getUsers(): getUsers.User[];
 // TODO:
 // dopo aver convertito getUsers in una funzione asincrona (come indicato in
 // userService.js) sostituire la dichiarazione con quella seguente:
-// declare function getUsers() : Promise<getUsers.User[]>;
+declare function getUsers() : Promise<getUsers.User[]>;
 
 declare namespace getUsers {
 

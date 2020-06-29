@@ -1,16 +1,16 @@
-import users from './users.js';
+// import users from './users.js';
+const axios = require('axios').default;
 
 /**
  * Restituisce l'elenco degli ipotetici utenti della nostra applicazione
  */
-export default function getUsers() {
-
-  return users;
+// export default function getUsers() {
+export default async function getUsers() {
 
   // TODO:
   // convertire questa funzione in una funzione asincrona e richiedere i dati
   // dalle API effettuando una chiamata http GET a questo URL:
-  // https://randomuser.me/api/?results=5000
+  // https://randomuser.me/api/?results=500
   // invece che importare i dati dal file users.js
   //
   // Per le chiamate http, i più coraggiosi possono utilizzare il JavaScript
@@ -53,5 +53,21 @@ export default function getUsers() {
   //
   // NB2: Una volta resa asincrona la funzione getUsers, aggiornare anche la sua
   //      interfaccia nel file userService.d.ts (è già pronta e commentata)
+
+  try {
+
+    const { status, data: { results } } = await axios.get('https://randomuser.me/api/?results=500');
+
+    if (status === 200) {
+      return results || [];
+    }
+
+    throw new Error(`Ricevuta risposta con http status ${status}`);
+
+  }
+  catch(err) {
+    console.error('Caricamento utenti fallito');
+    return [];
+  }
   
 }
